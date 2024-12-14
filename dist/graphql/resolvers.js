@@ -8,34 +8,78 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const todo_controller_1 = __importDefault(require("../controllers/todo.controller"));
-const user_controller_1 = __importDefault(require("../controllers/user.controller"));
+const customer_controller_1 = require("../controllers/customer.controller");
+const order_controller_1 = require("../controllers/order.controller");
+const product_controller_1 = require("../controllers/product.controller");
+// Finish the resolvers
 exports.resolvers = {
     Query: {
-        hello: () => "Hello World",
-        users: () => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.getUsers(); }),
-        getUserById: (_, { userId }) => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.getUserById(userId); }),
-        todos: () => __awaiter(void 0, void 0, void 0, function* () { return yield todo_controller_1.default.getTodos(); })
+        products: () => __awaiter(void 0, void 0, void 0, function* () {
+            return yield product_controller_1.productController.getProducts();
+        }),
+        customers: () => __awaiter(void 0, void 0, void 0, function* () {
+            return yield customer_controller_1.customerController.getCustomers();
+        }),
+        orders: () => __awaiter(void 0, void 0, void 0, function* () {
+            return yield order_controller_1.orderController.getOrders();
+        }),
+        getProductById: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield product_controller_1.productController.getProductById(args);
+        }),
+        getCustomerById: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield customer_controller_1.customerController.getCustomerById(args);
+        }),
+    },
+    Product: {
+        customers: (_a) => __awaiter(void 0, [_a], void 0, function* ({ _id }) {
+            return yield order_controller_1.orderController.getCustomersByProductId(_id);
+        }),
+    },
+    Customer: {
+        products: (_a) => __awaiter(void 0, [_a], void 0, function* ({ _id }) {
+            return yield order_controller_1.orderController.getProductsByCustomerId(_id);
+        }),
+    },
+    Order: {
+        product: ({ product }) => {
+            return product;
+        },
+        customer: ({ customer }) => {
+            return customer;
+        },
     },
     Mutation: {
-        /** User */
-        addUser: (_, { firstname, lastname, email }) => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.createUser({ firstname, lastname, email }); }),
-        editUser: (_, { id, firstname, lastname, email }) => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.updateUser(id, { firstname, lastname, email }); }),
-        removeUser: (_, { id }) => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.deleteUser(id); }),
-        /** Todo */
-        addTodo: (_, { text, userId }) => __awaiter(void 0, void 0, void 0, function* () { return yield todo_controller_1.default.createTodo({ text, completed: false, userId }); }),
-        editTodo: (_, { id, text, completed }) => __awaiter(void 0, void 0, void 0, function* () { return yield todo_controller_1.default.updateTodo(id, { text, completed }); }),
-        removeTodo: (_, { id }) => __awaiter(void 0, void 0, void 0, function* () { return yield todo_controller_1.default.deleteTodo(id); })
+        // Product
+        addProduct: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield product_controller_1.productController.createProduct(args);
+        }),
+        editProduct: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield product_controller_1.productController.updateProduct(args);
+        }),
+        removeProduct: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield product_controller_1.productController.deleteProduct(args);
+        }),
+        // Customer
+        addCustomer: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield customer_controller_1.customerController.createCustomer(args);
+        }),
+        editCustomer: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield customer_controller_1.customerController.updateCustomer(args);
+        }),
+        removeCustomer: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield customer_controller_1.customerController.deleteCustomer(args);
+        }),
+        // Order
+        addOrder: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield order_controller_1.orderController.createOrder(args);
+        }),
+        editOrder: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield order_controller_1.orderController.updateOrder(args);
+        }),
+        removeOrder: (_, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield order_controller_1.orderController.deleteOrder(args);
+        }),
     },
-    User: {
-        todos: (parent) => __awaiter(void 0, void 0, void 0, function* () { return yield todo_controller_1.default.getTodosByUserId(parent.id); })
-    },
-    Todo: {
-        user: (parent) => __awaiter(void 0, void 0, void 0, function* () { return yield user_controller_1.default.getUserById(parent.userId); })
-    }
 };
